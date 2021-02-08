@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="light_green">#E3FFFA</color>
-    <color name="green">#54838C</color>
+    <color name="grey">#5D5B5E</color>
     <color name="dark">#454545</color>
     <color name="pale_silver">#D5C7BC</color>
     <color name="deep_taupe">#785964</color>

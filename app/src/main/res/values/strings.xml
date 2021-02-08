@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">MobileLab1</string>
-    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_1">Main Tab</string>
     <string name="tab_text_2">Tab 2</string>
+    <string name="MainTitle"><pre>Базова Лідія\nГрупа ІВ-81\nЗК ІВ 8101</pre></string>
 </resources>

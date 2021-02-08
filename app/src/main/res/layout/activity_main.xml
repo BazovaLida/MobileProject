@@ -23,31 +23,18 @@
             android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
+            android:id="@+id/tabber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary" />
+            android:background="@drawable/tab_back" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
-    <TextView
-        android:id="@+id/replace_of_UILabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:cursorVisible="false"
-        android:duplicateParentState="false"
-        android:editable="false"
-        android:ellipsize="middle"
-        android:fontFamily="sans-serif"
-        android:gravity="center"
-        android:text="Базова Лідія\nГрупа ІВ-81\nЗК ІВ 8101"
-        android:textColor="#000000"
-        android:textSize="30sp"
-        app:layout_anchor="@+id/view_pager"
-        app:layout_anchorGravity="center" />
+    </androidx.viewpager.widget.ViewPager>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
