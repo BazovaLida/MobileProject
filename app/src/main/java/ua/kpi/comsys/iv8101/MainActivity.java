@@ -1,18 +1,9 @@
 package ua.kpi.comsys.iv8101;
 
 import android.os.Bundle;
-
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.ArrayList;
-
 import ua.kpi.comsys.iv8101.ui.main.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
