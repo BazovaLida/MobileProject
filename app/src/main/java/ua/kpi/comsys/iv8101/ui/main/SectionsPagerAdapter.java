@@ -1,15 +1,15 @@
 package ua.kpi.comsys.iv8101.ui.main;
 
 import android.content.Context;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import ua.kpi.comsys.iv8101.Fragment1;
 import ua.kpi.comsys.iv8101.R;
+import ua.kpi.comsys.iv8101.DrawingViewController;
+import ua.kpi.comsys.iv8101.Tab1ViewController;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -24,10 +24,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if (position == 0)
-            return new Fragment1();
-        else
-            return PlaceholderFragment.newInstance(position + 1);
+        switch (position) {
+            case 0:
+                return new Tab1ViewController();
+            case 1:
+                return new DrawingViewController();
+            default:
+                return PlaceholderFragment.newInstance(position + 1);
+        }
     }
 
     @Nullable

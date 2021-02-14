@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">MobileLab1</string>
     <string name="tab_text_1">Main Tab</string>
-    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_2">Drawing</string>
     <string name="MainTitle"><pre>Базова Лідія\nГрупа ІВ-81\nЗК ІВ 8101</pre></string>
+    <string name="view_mode">View mode</string>
+    <string name="diagram">Diagram</string>
+    <string name="graphic">Graphic</string>
 </resources>
