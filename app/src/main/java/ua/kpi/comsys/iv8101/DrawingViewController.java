@@ -20,6 +20,8 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.*;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.util.ArrayList;
+import java.util.Objects;
+
 import static android.view.View.INVISIBLE;
 
 
@@ -54,7 +56,7 @@ public class DrawingViewController extends Fragment {
     }
 
     private void initialiseLineFragment() {
-        lineChart = getView().findViewById(R.id.graphPlot);
+        lineChart = Objects.requireNonNull(getView()).findViewById(R.id.graphPlot);
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(false);
