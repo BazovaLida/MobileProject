@@ -12,23 +12,34 @@ import java.util.ArrayList;
 
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>  {
     private ArrayList<Book> books;
+    private final OnBookListener onBookListener;
 
-    public BooksAdapter(ArrayList<Book> bookList) {
+    public BooksAdapter(ArrayList<Book> bookList, OnBookListener onClick) {
         books = bookList;
+        onBookListener = onClick;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final TextView title, subtitle, price;
         public final ImageView imageView;
+        public final OnBookListener onBookListener;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, OnBookListener onBookListener) {
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
             title = itemView.findViewById(R.id.book_title);
             subtitle = itemView.findViewById(R.id.book_subtitle);
             price = itemView.findViewById(R.id.book_price);
-            imageView = itemView.findViewById(R.id.book_image);
+            imageView = itemView.findViewById(R.id.book_icon);
+            this.onBookListener = onBookListener;
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view){
+            onBookListener.onBookClick(getAdapterPosition());
         }
     }
 
@@ -41,7 +52,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         View library = inflater.inflate(R.layout.item_book, parent, false);
 
         // Return a new holder instance
-        return new ViewHolder(library);
+        return new ViewHolder(library, onBookListener);
     }
 
     @Override
@@ -50,21 +61,31 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         Book book = books.get(position);
 
         // Set item views based on your views and data model
-        TextView title = holder.title;
-        title.setText(book.getTitle());
+        holder.title.setText(book.getTitle());
 
-        TextView subtitle = holder.subtitle;
-        subtitle.setText(book.getSubtitle());
+        holder.subtitle.setText(book.getSubtitle());
 
-        TextView price = holder.price;
-        price.setText(book.getPrice());
+        holder.price.setText(book.getPrice());
 
-        ImageView imageView = holder.imageView;
-        imageView.setImageResource(book.getImageID());
+        holder.imageView.setImageResource(book.getImageID());
     }
 
     @Override
     public int getItemCount() {
         return books.size();
+    }
+
+    public interface OnBookListener {
+        void onBookClick(int position);
+    }
+
+    // method for filtering our recyclerview items.
+    public void changeList(ArrayList<Book> filterllist) {
+        // below line is to add our filtered
+        // list in our course array list.
+        books = filterllist;
+        // below line is to notify our adapter
+        // as change in recycler view data.
+        notifyDataSetChanged();
     }
 }
