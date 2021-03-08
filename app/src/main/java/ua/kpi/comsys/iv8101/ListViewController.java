@@ -98,7 +98,8 @@ public class ListViewController extends Fragment implements BooksAdapter.OnBookL
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                Toast.makeText(getContext(), "Deleted book " + (position + 1), Toast.LENGTH_SHORT).show();
+                String notification = "Deleted book " + library.get(position).getTitle();
+                Toast.makeText(getContext(), notification, Toast.LENGTH_SHORT).show();
                 library.remove(position);
                 adapter.changeList(library);
             }
