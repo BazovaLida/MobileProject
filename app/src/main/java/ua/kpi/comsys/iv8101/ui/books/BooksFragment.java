@@ -1,4 +1,4 @@
-package ua.kpi.comsys.iv8101;
+package ua.kpi.comsys.iv8101.ui.books;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -38,20 +37,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ua.kpi.comsys.iv8101.R;
 
-public class ListViewController extends Fragment implements BooksAdapter.OnBookListener  {
+
+public class BooksFragment extends Fragment implements BooksAdapter.OnBookListener  {
     private static final ArrayList<Book> library = new ArrayList<>();
-    private static BooksAdapter adapter;
+    public static BooksAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
-        View rootView = inflater.inflate(R.layout.frag_third, container, false);
-
-        return rootView;
+        return inflater.inflate(R.layout.fragment_books, container, false);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar);

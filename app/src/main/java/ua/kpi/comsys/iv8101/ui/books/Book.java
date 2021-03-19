@@ -1,4 +1,4 @@
-package ua.kpi.comsys.iv8101;
+package ua.kpi.comsys.iv8101.ui.books;
 
 public class Book {
     private final String title;

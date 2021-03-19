@@ -1,26 +1,20 @@
 <resources>
-    <string name="app_name">MobileLab1</string>
-    <string name="tab_text_1">Main Tab</string>
-    <string name="tab_text_2">Drawing</string>
-    <string name="tab_text_3">Library</string>
-    <string name="MainTitle"><pre>Базова Лідія\nГрупа ІВ-81\nЗК ІВ 8101</pre></string>
-    <string name="view_mode">View mode</string>
-    <string name="diagram">Diagram</string>
-    <string name="graphic">Graphic</string>
-    <string name="book_cover">book_cover</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_book_info">bookInfoActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="app_name">MobileLabs</string>
+    <string name="title_home">Home</string>
+    <string name="title_graph">Graph</string>
+    <string name="title_books">Books</string>
+    <string name="title_gallery">Gallery</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title">Title</string>
     <string name="subtitle">Subtitle</string>
     <string name="price">Price</string>
     <string name="add">ADD</string>
+    <string name="search">Search</string>
+    <string name="author_name"><pre>Базова Лідія\nГрупа ІВ-81\nЗК ІВ 8101</pre></string>
+    <string name="view_mode">View mode</string>
+    <string name="diagram">Diagram</string>
+    <string name="graphic">Graphic</string>
+    <string name="title_activity_app">MainActivity</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

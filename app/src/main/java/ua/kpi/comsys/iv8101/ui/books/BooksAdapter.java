@@ -1,4 +1,4 @@
-package ua.kpi.comsys.iv8101;
+package ua.kpi.comsys.iv8101.ui.books;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
+
+import ua.kpi.comsys.iv8101.R;
 
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>  {
     private ArrayList<Book> books;
