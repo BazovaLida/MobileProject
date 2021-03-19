@@ -1,4 +1,4 @@
-package ua.kpi.comsys.iv8101;
+package ua.kpi.comsys.iv8101.ui.graph;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,18 +21,19 @@ import com.github.mikephil.charting.data.*;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.util.ArrayList;
 
+import ua.kpi.comsys.iv8101.R;
+
 import static android.view.View.INVISIBLE;
 
 
-//Fragment - analog of the UIViewController
-public class DrawingViewController extends Fragment {
+public class GraphFragment extends Fragment {
     private LineChart lineChart;
     private PieChart pieChart;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.frag_second, container, false);
+        return inflater.inflate(R.layout.fragment_graph, container, false);
     }
 
     @Override

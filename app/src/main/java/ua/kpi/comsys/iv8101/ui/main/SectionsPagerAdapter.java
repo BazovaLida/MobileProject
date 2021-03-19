@@ -7,15 +7,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import ua.kpi.comsys.iv8101.ListViewController;
 import ua.kpi.comsys.iv8101.R;
-import ua.kpi.comsys.iv8101.DrawingViewController;
-import ua.kpi.comsys.iv8101.Tab1ViewController;
+import ua.kpi.comsys.iv8101.ui.books.BooksFragment;
+import ua.kpi.comsys.iv8101.ui.gallery.GalleryFragment;
+import ua.kpi.comsys.iv8101.ui.graph.GraphFragment;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
+    private static final int[] TAB_TITLES = new int[]{R.string.title_home, R.string.title_graph,
+            R.string.title_books, R.string.title_gallery};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -26,12 +27,12 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 0:
-                return new Tab1ViewController();
             case 1:
-                return new DrawingViewController();
+                return new GraphFragment();
             case 2:
-                return new ListViewController();
+                return new BooksFragment();
+            case 3:
+                return new GalleryFragment();
             default:
                 return PlaceholderFragment.newInstance(position + 1);
         }
@@ -46,6 +47,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // How many pages.
-        return 3;
+        return 4;
     }
 }

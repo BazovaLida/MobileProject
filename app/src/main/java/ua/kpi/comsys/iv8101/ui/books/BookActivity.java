@@ -1,4 +1,4 @@
-package ua.kpi.comsys.iv8101;
+package ua.kpi.comsys.iv8101.ui.books;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,6 +15,8 @@ import org.json.JSONObject;
 
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+
+import ua.kpi.comsys.iv8101.R;
 
 public class BookActivity extends AppCompatActivity {
 

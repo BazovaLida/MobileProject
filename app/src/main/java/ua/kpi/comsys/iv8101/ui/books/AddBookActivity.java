@@ -1,4 +1,4 @@
-package ua.kpi.comsys.iv8101;
+package ua.kpi.comsys.iv8101.ui.books;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import ua.kpi.comsys.iv8101.R;
 
 public class AddBookActivity extends AppCompatActivity {
 
@@ -52,7 +54,7 @@ public class AddBookActivity extends AppCompatActivity {
                 String newSubtitle = subtitleEditText.getText().toString();
                 String newPrice = "$" + priceEditText.getText().toString();
                 Book newBook = new Book(newTitle, newSubtitle, "", newPrice, 0);
-                ListViewController.addBook(newBook);
+                BooksFragment.addBook(newBook);
                 finish();
             }
         });

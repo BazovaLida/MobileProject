@@ -18,8 +18,9 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabs = findViewById(R.id.tabber);
         tabs.setupWithViewPager(viewPager);
-        tabs.getTabAt(0).setIcon(R.drawable.tab_background);
-        tabs.getTabAt(1).setIcon(R.drawable.tab2_backgr);
-        tabs.getTabAt(2).setIcon(R.drawable.tab3_backgr);
+        tabs.getTabAt(0).setIcon(R.drawable.ic_tab1_backgr);
+        tabs.getTabAt(1).setIcon(R.drawable.ic_tab2_backgr);
+        tabs.getTabAt(2).setIcon(R.drawable.ic_tab3_backgr);
+        tabs.getTabAt(3).setIcon(R.drawable.ic_tab4_backgr);
     }
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:id="@+id/container_picture"
+    android:orientation="vertical">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:rowCount="2">
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:rowCount="3">
+
+            <ImageView
+                android:id="@+id/gal_picture0"
+                android:padding="3dp"/>
+
+            <ImageView
+                android:id="@+id/gal_picture2"
+                android:padding="3dp"/>
+
+            <ImageView
+                android:id="@+id/gal_picture3"
+                android:padding="3dp"/>
+        </GridLayout>
+
+        <ImageView
+            android:id="@+id/gal_picture1"
+            android:padding="3dp"/>
+    </GridLayout>
+
+    <GridLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:rowCount="4">
+
+        <ImageView
+            android:id="@+id/gal_picture4"
+            android:padding="3dp"/>
+
+        <ImageView
+            android:id="@+id/gal_picture5"
+            android:padding="3dp"/>
+
+        <ImageView
+            android:id="@+id/gal_picture6"
+            android:padding="3dp"/>
+
+        <ImageView
+            android:id="@+id/gal_picture7"
+            android:padding="3dp"/>
+    </GridLayout>
+</LinearLayout>
