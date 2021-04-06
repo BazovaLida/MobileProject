@@ -46,6 +46,7 @@ public class BooksFragment extends Fragment implements BooksAdapter.OnBookListen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_books, container, false);
     }
 
