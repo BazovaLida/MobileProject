@@ -17,4 +17,6 @@
     <string name="title_activity_app">MainActivity</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="no_books_found">No books found</string>
+    <string name="exception">Exception! No information found</string>
 </resources>

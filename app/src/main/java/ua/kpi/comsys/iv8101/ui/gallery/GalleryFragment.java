@@ -8,13 +8,22 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import ua.kpi.comsys.iv8101.MainActivity;
 import ua.kpi.comsys.iv8101.R;
@@ -47,11 +56,32 @@ public class GalleryFragment extends Fragment {
         });
 
         RecyclerView recView = view.findViewById(R.id.recycler_gallery);
-
         recView.setAdapter(galleryAdapter);
         recView.setHasFixedSize(true);
-
         recView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+
+        String url = "https://pixabay.com/api/?key=19193969-87191e5db266905fe8936d565&q=hot+summer&image_type=photo&per_page=24";
+        AndroidNetworking.get(url)
+                .setPriority(Priority.LOW)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray images = response.getJSONArray("hits");
+
+                            galleryAdapter.addElementsURL(images);
+                        } catch (JSONException e) {
+                            Toast.makeText(getContext(), "JSON exception!", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError error) {
+                        Toast.makeText(getContext(), "Error while getting response", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     @Override
@@ -59,7 +89,7 @@ public class GalleryFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == MainActivity.RESULT_OK && data != null){
             Uri uri = data.getData();
-            galleryAdapter.addElement(uri);
+            galleryAdapter.addElementUri(uri);
         }
     }
 }

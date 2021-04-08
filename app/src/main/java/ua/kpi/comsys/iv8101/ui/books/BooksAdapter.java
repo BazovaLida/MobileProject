@@ -6,8 +6,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.koushikdutta.ion.Ion;
 import java.util.ArrayList;
 
 import ua.kpi.comsys.iv8101.R;
@@ -27,13 +27,13 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         public final OnBookListener onBookListener;
 
         public ViewHolder(View itemView, OnBookListener onBookListener) {
-            // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
             super(itemView);
+
             title = itemView.findViewById(R.id.book_title);
             subtitle = itemView.findViewById(R.id.book_subtitle);
             price = itemView.findViewById(R.id.book_price);
             imageView = itemView.findViewById(R.id.book_icon);
+
             this.onBookListener = onBookListener;
 
             itemView.setOnClickListener(this);
@@ -45,9 +45,13 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         }
     }
 
-    @NonNull
+    public interface OnBookListener {
+        void onBookClick(int position);
+    }
+
+
     @Override
-    public BooksAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BooksAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         // Inflate the custom layout
@@ -58,7 +62,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BooksAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(BooksAdapter.ViewHolder holder, int position) {
         // Get the data model based on position
         Book book = books.get(position);
 
@@ -69,7 +73,8 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
 
         holder.price.setText(book.getPrice());
 
-        holder.imageView.setImageResource(book.getImageID());
+        Ion.with(holder.imageView)
+                .load(book.getImageSRC());
     }
 
     @Override
@@ -77,17 +82,12 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         return books.size();
     }
 
-    public interface OnBookListener {
-        void onBookClick(int position);
+    public void changeList(ArrayList<Book> filterllist) {
+        books = filterllist;
+        notifyDataSetChanged();
     }
 
-    // method for filtering our recyclerview items.
-    public void changeList(ArrayList<Book> filterllist) {
-        // below line is to add our filtered
-        // list in our course array list.
-        books = filterllist;
-        // below line is to notify our adapter
-        // as change in recycler view data.
-        notifyDataSetChanged();
+    public ArrayList<Book> getBooks() {
+        return books;
     }
 }
