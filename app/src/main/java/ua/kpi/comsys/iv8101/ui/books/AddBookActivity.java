@@ -37,10 +37,7 @@ public class AddBookActivity extends AppCompatActivity {
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals(""))
-                    addButton.setEnabled(true);
-                else
-                    addButton.setEnabled(false);
+                addButton.setEnabled(!s.toString().equals(""));
             }
             @Override
             public void afterTextChanged(Editable s) {
@@ -53,8 +50,11 @@ public class AddBookActivity extends AppCompatActivity {
                 String newTitle = titleEditText.getText().toString();
                 String newSubtitle = subtitleEditText.getText().toString();
                 String newPrice = "$" + priceEditText.getText().toString();
-                Book newBook = new Book(newTitle, newSubtitle, "", newPrice, 0);
+                Book newBook = new Book(newTitle, newSubtitle, newPrice,true);
+
+
                 BooksFragment.addBook(newBook);
+
                 finish();
             }
         });

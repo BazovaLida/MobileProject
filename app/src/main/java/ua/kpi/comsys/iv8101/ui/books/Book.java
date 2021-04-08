@@ -5,7 +5,7 @@ public class Book {
     private final String subtitle;
     private final String isbn13;
     private final String price;
-    private final int image;
+    private final String imageSRC;
 
     private String authors;
     private String publisher;
@@ -14,12 +14,23 @@ public class Book {
     private String rating;
     private String desc;
 
-    public Book(String title, String subtitle, String isbn13, String price, int image) {
+    private boolean created = false;
+
+    public Book(String title, String subtitle, String isbn13, String price, String image) {
         this.title = title;
         this.subtitle = subtitle;
         this.isbn13 = isbn13;
         this.price = price;
-        this.image = image;
+        this.imageSRC = image;
+    }
+
+    public Book(String title, String subtitle, String price, boolean created) {
+        this.title = title;
+        this.subtitle = subtitle;
+        this.isbn13 = "";
+        this.price = price;
+        this.imageSRC = null;
+        this.created = created;
     }
 
     public void setInfo(String authors, String publisher, String pages, String year, String rating, String description){
@@ -43,8 +54,8 @@ public class Book {
     public String getIsbn13() {
         return "i" + isbn13;
     }
-    public int getImageID(){
-        return image;
+    public String getImageSRC(){
+        return imageSRC;
     }
     public String getAuthors() {
         return authors;
@@ -74,5 +85,9 @@ public class Book {
                 "<font color=#888888>Pages: </font> " + pages + "<br> " +
                 "<font color=#888888>Year: </font> " + year + "<br> " +
                 "<font color=#888888>Rating: </font> " + rating + "<br>";
+    }
+
+    public boolean isCreated(){
+        return created;
     }
 }

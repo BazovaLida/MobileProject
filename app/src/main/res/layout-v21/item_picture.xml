@@ -20,20 +20,20 @@
 
             <ImageView
                 android:id="@+id/gal_picture0"
-                android:padding="3dp"/>
+                style="@style/PictureStyle"/>
 
             <ImageView
                 android:id="@+id/gal_picture2"
-                android:padding="3dp"/>
+                style="@style/PictureStyle"/>
 
             <ImageView
                 android:id="@+id/gal_picture3"
-                android:padding="3dp"/>
+                style="@style/PictureStyle"/>
         </GridLayout>
 
         <ImageView
             android:id="@+id/gal_picture1"
-            android:padding="3dp"/>
+            style="@style/PictureStyle"/>
     </GridLayout>
 
     <GridLayout
@@ -44,18 +44,18 @@
 
         <ImageView
             android:id="@+id/gal_picture4"
-            android:padding="3dp"/>
+            style="@style/PictureStyle"/>
 
         <ImageView
             android:id="@+id/gal_picture5"
-            android:padding="3dp"/>
+            style="@style/PictureStyle"/>
 
         <ImageView
             android:id="@+id/gal_picture6"
-            android:padding="3dp"/>
+            style="@style/PictureStyle"/>
 
         <ImageView
             android:id="@+id/gal_picture7"
-            android:padding="3dp"/>
+            style="@style/PictureStyle"/>
     </GridLayout>
 </LinearLayout>

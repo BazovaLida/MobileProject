@@ -2,13 +2,11 @@ package ua.kpi.comsys.iv8101.ui.books;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,12 +14,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -30,9 +29,12 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,11 +48,12 @@ public class BooksFragment extends Fragment implements BooksAdapter.OnBookListen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_books, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar);
         toolbar.setTitle("Search");
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
@@ -61,10 +64,8 @@ public class BooksFragment extends Fragment implements BooksAdapter.OnBookListen
 
     private void setUpRecyclerView(RecyclerView recyclerView, View view) {
         Context context = requireActivity().getApplicationContext();
-        if(library.isEmpty())
-            createLibrary(context);
-        adapter = new BooksAdapter(library, this);
 
+        adapter = new BooksAdapter(library, this);
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
 
@@ -72,6 +73,7 @@ public class BooksFragment extends Fragment implements BooksAdapter.OnBookListen
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(itemDecoration);
+
 
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new
@@ -95,10 +97,10 @@ public class BooksFragment extends Fragment implements BooksAdapter.OnBookListen
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                String notification = "Deleted book " + library.get(position).getTitle();
-                Toast.makeText(getContext(), notification, Toast.LENGTH_SHORT).show();
-                library.remove(position);
-                adapter.changeList(library);
+                Book deleted = adapter.getBooks().remove(position);
+                library.remove(deleted);
+                adapter.notifyDataSetChanged();
+                Toast.makeText(getContext(), "Deleted book " + deleted.getTitle(), Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
@@ -137,37 +139,58 @@ public class BooksFragment extends Fragment implements BooksAdapter.OnBookListen
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
     }
-    private void createLibrary(Context context) {
-        Scanner scanner = new Scanner(getResources().openRawResource(R.raw.bookslist));
-        try {
-            String data = scanner.nextLine();
-            JSONObject jsonObject = new JSONObject(data);
-
-            JSONArray booksInJSON = jsonObject.getJSONArray("books");
-            for (int i = 0; i < booksInJSON.length(); i++) {
-                JSONObject c = booksInJSON.getJSONObject(i);
-                String title = c.getString("title");
-                String subtitle = c.getString("subtitle");
-                String isbn13 = c.getString("isbn13");
-                String price = c.getString("price");
-                String image = c.getString("image").toLowerCase();
 
 
-                int formatIndex = image.lastIndexOf(".");
-                if(formatIndex == -1)
-                    formatIndex = 0;
-                String img = image.substring(0, formatIndex);
 
-                int imageID = getResources().getIdentifier(img, "drawable", getContext().getPackageName());
-                library.add(new Book(title, subtitle, isbn13, price, imageID));
-            }
-        } catch (JSONException e) {
-            Toast.makeText(context, "JSON exception!", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        } catch (NoSuchElementException e){
-            Toast.makeText(context, "Exception while scanning file!", Toast.LENGTH_SHORT).show();
-        }
+    private void onSearch(String request) {
+
+        TextView noFoundMsg = (TextView)  requireView().findViewById(R.id.no_book_msg);
+        noFoundMsg.setVisibility(View.GONE);
+
+        // https://ybq.github.io/Android-SpinKit
+        ProgressBar progressBar = (ProgressBar)requireView().findViewById(R.id.loading_books);
+        progressBar.setVisibility(View.VISIBLE);
+
+        String url = "https://api.itbook.store/1.0/search/" + request;
+
+        AndroidNetworking.get(url)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray booksInJSON = response.getJSONArray("books");
+
+                            for (int i = 0; i < booksInJSON.length(); i++) {
+                                JSONObject c = booksInJSON.getJSONObject(i);
+                                String title = c.getString("title");
+                                String subtitle = c.getString("subtitle");
+                                String isbn13 = c.getString("isbn13");
+                                String price = c.getString("price");
+                                String imageURL = c.getString("image");
+
+
+                                library.add(new Book(title, subtitle, isbn13, price, imageURL));
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(getContext(), "JSON exception!", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+
+                        progressBar.setVisibility(View.GONE);
+                        if(library.isEmpty())
+                            noFoundMsg.setVisibility(View.VISIBLE);
+                        adapter.changeList(library);
+                    }
+
+                    @Override
+                    public void onError(ANError error) {
+                        Toast.makeText(getContext(), "Error while getting response", Toast.LENGTH_LONG).show();
+                        // handle error
+                    }
+                });
     }
+
     public static void addBook(Book book){
         library.add(book);
         adapter.changeList(library);
@@ -175,13 +198,11 @@ public class BooksFragment extends Fragment implements BooksAdapter.OnBookListen
 
     @Override
     public void onBookClick(int position) {
-        String isbn = library.get(position).getIsbn13();
-        Resources res  = getContext().getResources();
-        int infoId = res.getIdentifier(isbn, "raw", getContext().getPackageName());
+        String isbn = adapter.getBooks().get(position).getIsbn13();
 
-        if(infoId != 0) {
+        if(!isbn.equals("")) {
             Intent intent = new Intent(requireActivity(), BookActivity.class);
-            intent.putExtra("file", infoId);
+            intent.putExtra("isbn", isbn);
             startActivity(intent);
         }
     }
@@ -207,20 +228,26 @@ public class BooksFragment extends Fragment implements BooksAdapter.OnBookListen
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                ArrayList<Book> filtered = new ArrayList<>();
 
-                // running a for loop to compare elements.
-                for (Book item : library) {
-                    // checking if the entered string matched with any item of our recycler view.
-                    if (item.getTitle().toLowerCase().contains(newText.toLowerCase())) {
-                        // if the item is matched, adding it to our filtered list.
-                        filtered.add(item);
-                    }
+                ArrayList<Book> found = new ArrayList<>();
+                for (Book item: library) {
+                    if(!item.isCreated())
+                        found.add(item);
                 }
-                if (filtered.isEmpty()) {
-                    Toast.makeText(getContext(), "No Book Found.", Toast.LENGTH_SHORT).show();
+                library.removeAll(found);
+                if(library.isEmpty()){
+                    TextView noFoundMsg = (TextView)  requireView().findViewById(R.id.no_book_msg);
+                    noFoundMsg.setVisibility(View.VISIBLE);
+
+                    // https://ybq.github.io/Android-SpinKit
+                    ProgressBar progressBar = (ProgressBar)requireView().findViewById(R.id.loading_books);
+                    progressBar.setVisibility(View.GONE);
                 }
-                adapter.changeList(filtered);
+                adapter.changeList(library);
+
+                if(newText.length() > 2)
+                    onSearch(newText);
+
                 return false;
             }
         });

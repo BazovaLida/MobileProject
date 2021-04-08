@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="light_green">#E3FFFA</color>
-    <color name="dark">#454545</color>
-    <color name="pale_silver">#ffD5C7BC</color>
+    <color name="dark">#283C4F</color>
+    <color name="light">#D6FDFE</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
     <color name="blue">#ff00bfff</color>
-    <color name="neutral">#7A6967</color>
     <color name="light_grey">#cccccc</color>
     <color name="red">#FA1E1E</color>
 </resources>

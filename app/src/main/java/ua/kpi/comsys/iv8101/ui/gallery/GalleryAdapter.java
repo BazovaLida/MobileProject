@@ -4,18 +4,27 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.koushikdutta.ion.Ion;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 
 import ua.kpi.comsys.iv8101.R;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder>  {
-    private static final ArrayList<Uri[]> pictures = new ArrayList<>();
+    private static final ArrayList<Picture[]> pictures = new ArrayList<>();
     private static int counter = -1;
     private final int IMAGE_SIZE;
+    private int lastViewed = -1;
 
     public GalleryAdapter(int w){
         setHasStableIds(true);
@@ -41,22 +50,32 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        for (int i = 0; i < pictures.get(position).length &&
-                     pictures.get(position)[i] != null; i++) {
-            ImageView currIV = holder.imageViews[i];
+        if(position > lastViewed)
+            for (int i = 0; i < 8 && pictures.get(position)[i] != null; i++) {
+                int size = IMAGE_SIZE;
+                if(i == 1)
+                    size *= 3;
 
-            currIV.setCropToPadding(true);
-            currIV.setImageURI(pictures.get(position)[i]);
-            currIV.setAdjustViewBounds(true);
-            currIV.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            if(i == 1){
-                currIV.getLayoutParams().width = IMAGE_SIZE * 3;
-                currIV.getLayoutParams().height = IMAGE_SIZE * 3;
-            } else{
-                currIV.getLayoutParams().width = IMAGE_SIZE;
-                currIV.getLayoutParams().height = IMAGE_SIZE;
+                ImageView currIV = holder.imageViews[i];
+                Uri currUri = pictures.get(position)[i].getUri();
+
+                currIV.getLayoutParams().width = size;
+                currIV.getLayoutParams().height = size;
+
+                if(currUri == null) {
+                    Animation a = new RotateAnimation(0.0f, 360.0f,
+                            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                            0.5f);
+                    a.setRepeatCount(-1);
+                    a.setDuration(1000);
+                    Ion.with(currIV)
+                            .placeholder(R.drawable.ic_spinner_pb)
+                            .animateLoad(a)
+                            .load(pictures.get(position)[i].getLink());
+                }
+                else currIV.setImageURI(currUri);
             }
-        }
+        lastViewed = position;
     }
 
     @Override
@@ -64,13 +83,28 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         return pictures.size();
     }
 
-    public void addElement(Uri uri) {
+    public void addElementUri(Uri uri) {
         counter ++;
         if(counter % 8 == 0)
-            pictures.add(new Uri[8]);
-        pictures.get(counter / 8)[counter % 8] = uri;
+            pictures.add(new Picture[8]);
+        pictures.get(counter / 8)[counter % 8] = new Picture(uri);
         notifyDataSetChanged();
     }
+
+
+    public void addElementsURL(JSONArray elements) throws JSONException {
+        for (int i = 0; i < elements.length(); i++) {
+            counter ++;
+            if(counter % 8 == 0)
+                pictures.add(new Picture[8]);
+
+            String currURL = elements.getJSONObject(i).getString("webformatURL");
+            pictures.get(counter / 8)[counter % 8] = new Picture(currURL);
+
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());

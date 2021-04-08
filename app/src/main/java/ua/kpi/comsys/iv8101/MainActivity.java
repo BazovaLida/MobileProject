@@ -1,6 +1,8 @@
 package ua.kpi.comsys.iv8101;
 
 import android.os.Bundle;
+
+import com.androidnetworking.AndroidNetworking;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,5 +24,7 @@ public class MainActivity extends AppCompatActivity {
         tabs.getTabAt(1).setIcon(R.drawable.ic_tab2_backgr);
         tabs.getTabAt(2).setIcon(R.drawable.ic_tab3_backgr);
         tabs.getTabAt(3).setIcon(R.drawable.ic_tab4_backgr);
+
+        AndroidNetworking.initialize(getApplicationContext());
     }
 }
