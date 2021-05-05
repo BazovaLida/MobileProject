@@ -57,7 +57,7 @@ public class GalleryFragment extends Fragment {
 
         RecyclerView recView = view.findViewById(R.id.recycler_gallery);
         recView.setAdapter(galleryAdapter);
-        recView.setHasFixedSize(true);
+//        recView.setHasFixedSize(true);
         recView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         String url = "https://pixabay.com/api/?key=19193969-87191e5db266905fe8936d565&q=hot+summer&image_type=photo&per_page=24";
