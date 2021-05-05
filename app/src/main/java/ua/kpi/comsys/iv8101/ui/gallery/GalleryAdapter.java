@@ -24,7 +24,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     private static final ArrayList<Picture[]> pictures = new ArrayList<>();
     private static int counter = -1;
     private final int IMAGE_SIZE;
-    private int lastViewed = -1;
 
     public GalleryAdapter(int w){
         setHasStableIds(true);
@@ -47,40 +46,53 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         }
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-        if(position > lastViewed)
-            for (int i = 0; i < 8 && pictures.get(position)[i] != null; i++) {
-                int size = IMAGE_SIZE;
+    @Override public void onBindViewHolder(ViewHolder holder, int position) {
+        int size;
+        ImageView currIV;
+            for (int i = 0; i < 8; i++) {
+                currIV = holder.imageViews[i];
+                size = IMAGE_SIZE;
                 if(i == 1)
                     size *= 3;
-
-                ImageView currIV = holder.imageViews[i];
-                Uri currUri = pictures.get(position)[i].getUri();
-
                 currIV.getLayoutParams().width = size;
                 currIV.getLayoutParams().height = size;
+                currIV.setVisibility(View.INVISIBLE);
 
-                if(currUri == null) {
-                    Animation a = new RotateAnimation(0.0f, 360.0f,
-                            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-                            0.5f);
-                    a.setRepeatCount(-1);
-                    a.setDuration(1000);
-                    Ion.with(currIV)
-                            .placeholder(R.drawable.ic_spinner_pb)
-                            .animateLoad(a)
-                            .load(pictures.get(position)[i].getLink());
+                if(pictures.get(position)[i] != null){
+                    currIV.setVisibility(View.VISIBLE);
+
+                    Uri currUri = pictures.get(position)[i].getUri();
+                    if (currUri == null) {
+                        Animation a = new RotateAnimation(0.0f, 360.0f,
+                                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                                0.5f);
+                        a.setRepeatCount(-1);
+                        a.setDuration(1000);
+                        Ion.with(currIV)
+                                .placeholder(R.drawable.ic_spinner_pb)
+                                .animateLoad(a)
+                                .load(pictures.get(position)[i].getLink());
+                    } else currIV.setImageURI(currUri);
                 }
-                else currIV.setImageURI(currUri);
             }
-        lastViewed = position;
     }
 
     @Override
     public int getItemCount() {
         return pictures.size();
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View prevView = inflater.inflate(R.layout.item_picture, parent, false);
+        return new ViewHolder(prevView);
     }
 
     public void addElementUri(Uri uri) {
@@ -90,7 +102,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         pictures.get(counter / 8)[counter % 8] = new Picture(uri);
         notifyDataSetChanged();
     }
-
 
     public void addElementsURL(JSONArray elements) throws JSONException {
         for (int i = 0; i < elements.length(); i++) {
@@ -103,12 +114,5 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
         }
         notifyDataSetChanged();
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View prevView = inflater.inflate(R.layout.item_picture, parent, false);
-        return new ViewHolder(prevView);
     }
 }
