@@ -45,10 +45,12 @@ import ua.kpi.comsys.iv8101.R;
 public class BooksFragment extends Fragment implements BooksAdapter.OnBookListener  {
     private static final ArrayList<Book> library = new ArrayList<>();
     public static BooksAdapter adapter;
+    public static SQLiteDatabaseBooksHandler db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        db = new SQLiteDatabaseBooksHandler(requireActivity().getApplicationContext());
         return inflater.inflate(R.layout.fragment_books, container, false);
     }
 
@@ -140,8 +142,6 @@ public class BooksFragment extends Fragment implements BooksAdapter.OnBookListen
 
     }
 
-
-
     private void onSearch(String request) {
 
         TextView noFoundMsg = (TextView)  requireView().findViewById(R.id.no_book_msg);
@@ -163,14 +163,16 @@ public class BooksFragment extends Fragment implements BooksAdapter.OnBookListen
 
                             for (int i = 0; i < booksInJSON.length(); i++) {
                                 JSONObject c = booksInJSON.getJSONObject(i);
+
                                 String title = c.getString("title");
                                 String subtitle = c.getString("subtitle");
                                 String isbn13 = c.getString("isbn13");
                                 String price = c.getString("price");
                                 String imageURL = c.getString("image");
 
-
-                                library.add(new Book(title, subtitle, isbn13, price, imageURL));
+                                Book newBook = new Book(title, subtitle, isbn13, price, imageURL);
+                                library.add(newBook);
+                                db.addBook(newBook);
                             }
                         } catch (JSONException e) {
                             Toast.makeText(getContext(), "JSON exception!", Toast.LENGTH_SHORT).show();
@@ -178,15 +180,23 @@ public class BooksFragment extends Fragment implements BooksAdapter.OnBookListen
                         }
 
                         progressBar.setVisibility(View.GONE);
-                        if(library.isEmpty())
+                        if(library.isEmpty()) {
+                            noFoundMsg.setText("No books found by this request.");
                             noFoundMsg.setVisibility(View.VISIBLE);
+                        }
                         adapter.changeList(library);
                     }
 
                     @Override
                     public void onError(ANError error) {
-                        Toast.makeText(getContext(), "Error while getting response", Toast.LENGTH_LONG).show();
-                        // handle error
+                        library.addAll(db.search(request));
+                        progressBar.setVisibility(View.GONE);
+                        if(library.isEmpty()) {
+                            noFoundMsg.setText("No books found in Database");
+                            noFoundMsg.setVisibility(View.VISIBLE);
+                        }
+                        adapter.changeList(library);
+
                     }
                 });
     }
@@ -198,11 +208,12 @@ public class BooksFragment extends Fragment implements BooksAdapter.OnBookListen
 
     @Override
     public void onBookClick(int position) {
-        String isbn = adapter.getBooks().get(position).getIsbn13();
+        Book book = adapter.getBooks().get(position);
 
-        if(!isbn.equals("")) {
+        if(book != null) {
             Intent intent = new Intent(requireActivity(), BookActivity.class);
-            intent.putExtra("isbn", isbn);
+            intent.putExtra("isbn", book.getIsbn13());
+            intent.putExtra("id", book.getId());
             startActivity(intent);
         }
     }
