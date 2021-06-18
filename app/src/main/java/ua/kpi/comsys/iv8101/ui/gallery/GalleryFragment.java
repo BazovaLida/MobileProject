@@ -25,14 +25,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import ua.kpi.comsys.iv8101.MainActivity;
 import ua.kpi.comsys.iv8101.R;
 
 public class GalleryFragment extends Fragment {
     private GalleryAdapter galleryAdapter;
+    public static SQLiteDatabaseGalHandler db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        db = new SQLiteDatabaseGalHandler(requireActivity().getApplicationContext());
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) requireContext()).getWindowManager()
                 .getDefaultDisplay()
@@ -70,7 +75,12 @@ public class GalleryFragment extends Fragment {
                         try {
                             JSONArray images = response.getJSONArray("hits");
 
-                            galleryAdapter.addElementsURL(images);
+                            for (int i = 0; i < images.length(); i++) {
+                                String currURL = images.getJSONObject(i).getString("webformatURL");
+                                Picture currPict = new Picture(currURL);
+                                galleryAdapter.addElementURL(currPict);
+                                db.addItem(currPict);
+                            }
                         } catch (JSONException e) {
                             Toast.makeText(getContext(), "JSON exception!", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
@@ -80,6 +90,10 @@ public class GalleryFragment extends Fragment {
                     @Override
                     public void onError(ANError error) {
                         Toast.makeText(getContext(), "Error while getting response", Toast.LENGTH_LONG).show();
+                        ArrayList<Picture> pictures_in_DB = db.allItems();
+                        for (int i = 0; i < pictures_in_DB.size(); i++) {
+                            galleryAdapter.addElementURL(pictures_in_DB.get(i));
+                        }
                     }
                 });
     }

@@ -49,39 +49,38 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
         int size;
         ImageView currIV;
-            for (int i = 0; i < 8; i++) {
-                currIV = holder.imageViews[i];
-                size = IMAGE_SIZE;
-                if(i == 1)
-                    size *= 3;
-                currIV.getLayoutParams().width = size;
-                currIV.getLayoutParams().height = size;
-                currIV.setVisibility(View.INVISIBLE);
+        for (int i = 0; i < 8; i++) {
+            currIV = holder.imageViews[i];
+            size = IMAGE_SIZE;
+            if(i == 1)
+                size *= 3;
+            currIV.getLayoutParams().width = size;
+            currIV.getLayoutParams().height = size;
+            currIV.setVisibility(View.INVISIBLE);
 
-                if(pictures.get(position)[i] != null){
-                    currIV.setVisibility(View.VISIBLE);
+            if(pictures.get(position)[i] != null){
+                currIV.setVisibility(View.VISIBLE);
 
-                    Uri currUri = pictures.get(position)[i].getUri();
-                    if (currUri == null) {
-                        Animation a = new RotateAnimation(0.0f, 360.0f,
-                                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-                                0.5f);
-                        a.setRepeatCount(-1);
-                        a.setDuration(1000);
-                        Ion.with(currIV)
-                                .placeholder(R.drawable.ic_spinner_pb)
-                                .animateLoad(a)
-                                .load(pictures.get(position)[i].getLink());
-                    } else currIV.setImageURI(currUri);
-                }
+                Uri currUri = pictures.get(position)[i].getUri();
+                if (currUri == null) {
+                    Animation a = new RotateAnimation(0.0f, 360.0f,
+                            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                            0.5f);
+                    a.setRepeatCount(-1);
+                    a.setDuration(1000);
+                    Ion.with(currIV)
+                            .placeholder(R.drawable.ic_spinner_pb)
+                            .animateLoad(a)
+                            .load(pictures.get(position)[i].getLink());
+                } else currIV.setImageURI(currUri);
             }
+        }
     }
 
     @Override
     public int getItemCount() {
         return pictures.size();
     }
-
 
     @Override
     public int getItemViewType(int position) {
@@ -103,16 +102,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         notifyDataSetChanged();
     }
 
-    public void addElementsURL(JSONArray elements) throws JSONException {
-        for (int i = 0; i < elements.length(); i++) {
-            counter ++;
-            if(counter % 8 == 0)
-                pictures.add(new Picture[8]);
+    public void addElementURL(Picture picture){
+        counter ++;
+        if(counter % 8 == 0)
+            pictures.add(new Picture[8]);
 
-            String currURL = elements.getJSONObject(i).getString("webformatURL");
-            pictures.get(counter / 8)[counter % 8] = new Picture(currURL);
+        pictures.get(counter / 8)[counter % 8] = picture;
 
-        }
-        notifyDataSetChanged();
+        if(counter == 23)
+            notifyDataSetChanged();
     }
 }

@@ -1,5 +1,7 @@
 package ua.kpi.comsys.iv8101.ui.books;
 
+import android.icu.util.EthiopicCalendar;
+
 public class Book {
     private final String title;
     private final String subtitle;
@@ -14,6 +16,8 @@ public class Book {
     private String rating;
     private String desc;
 
+    private Integer id;
+    private static int counter = 0;
     private boolean created = false;
 
     public Book(String title, String subtitle, String isbn13, String price, String image) {
@@ -52,7 +56,7 @@ public class Book {
         return price;
     }
     public String getIsbn13() {
-        return "i" + isbn13;
+        return isbn13;
     }
     public String getImageSRC(){
         return imageSRC;
@@ -74,6 +78,17 @@ public class Book {
     }
     public String getDesc() {
         return desc;
+    }
+
+    public void setId() {
+         id = counter;
+         counter ++;
+    }
+    public void setId(int value) {
+        id = value;
+    }
+    public Integer getId() {
+        return id;
     }
 
     public String getInfo() {

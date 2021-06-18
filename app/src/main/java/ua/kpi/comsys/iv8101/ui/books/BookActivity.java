@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import ua.kpi.comsys.iv8101.R;
 
 public class BookActivity extends AppCompatActivity {
+    private SQLiteDatabaseBooksHandler db = BooksFragment.db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,16 +36,19 @@ public class BookActivity extends AppCompatActivity {
 
     private void getBookFullInfo(){
         String isbn = getIntent().getExtras().getString("isbn");
-        String url = "https://api.itbook.store/1.0/books/" + isbn.substring(1);
-        ProgressBar progressBar = (ProgressBar)findViewById(R.id.loading_info);
-        TextView tv = findViewById(R.id.book_info);
 
-        AndroidNetworking.get(url)
-                .build()
+        String url = "https://api.itbook.store/1.0/books/" + isbn;
+
+        ProgressBar progressBar = findViewById(R.id.loading_info);
+        TextView tv = findViewById(R.id.book_info);
+        ImageView imageView = findViewById(R.id.book_image);
+
+        AndroidNetworking.get(url).build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            int id = getIntent().getExtras().getInt("id");
 
                             String title = response.getString("title");
                             String subtitle = response.getString("subtitle");
@@ -61,27 +65,32 @@ public class BookActivity extends AppCompatActivity {
 
                             Book currBook = new Book(title, subtitle, isbn13, price, image);
                             currBook.setInfo(authors, publisher, pages, year, rating, desc);
+                            currBook.setId(id);
 
-                            ImageView imageView = findViewById(R.id.book_image);
+                            db.update(currBook);
 
                             tv.setText(Html.fromHtml(currBook.getInfo()));
                             Ion.with(imageView).load(currBook.getImageSRC());
-                            progressBar.setVisibility(View.GONE);
-                        }
-                        catch (JSONException e) {
+
+                        } catch (JSONException e) {
                             tv.setText(Html.fromHtml("JSONException!"));
-                            progressBar.setVisibility(View.GONE);
                             e.printStackTrace();
                         }
                     }
 
                     @Override
                     public void onError(ANError error) {
-                        tv.setText(Html.fromHtml("Get request error."));
-                        progressBar.setVisibility(View.GONE);
-                        error.printStackTrace();
+                        Book downloaded = db.getByIsbn(isbn);
+                        if(downloaded == null) {
+                            tv.setText(Html.fromHtml("This book is not in Database."));
+                            error.printStackTrace();
+                        } else {
+                            tv.setText(Html.fromHtml(downloaded.getInfo()));
+                            Ion.with(imageView).load(downloaded.getImageSRC());
+                        }
                     }
                 });
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
